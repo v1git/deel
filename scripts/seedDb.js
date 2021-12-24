@@ -1,14 +1,11 @@
-const { Profile, Contract, Job } = require('../src/model');
-
-/* WARNING THIS WILL DROP THE CURRENT DATABASE */
-seed();
+import { Profile, Contract, Job } from '../src/model.js';
 
 async function seed() {
   // create tables
   await Profile.sync({ force: true });
   await Contract.sync({ force: true });
   await Job.sync({ force: true });
-  //insert data
+  // insert data
   await Promise.all([
    Profile.create({
       id: 1,
@@ -228,3 +225,6 @@ async function seed() {
     
   ]);
 }
+
+/* WARNING THIS WILL DROP THE CURRENT DATABASE */
+seed();
