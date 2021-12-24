@@ -75,7 +75,7 @@ export default class JobService {
         throw new BadRequestException('There are not enough funds on your account');
       }
 
-      job.set({ paid: true });
+      job.set({ paid: true, paymentDate: new Date() });
       await job.save({ transaction: t });
 
       await sequelize.models.Profile.decrement(
