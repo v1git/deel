@@ -21,7 +21,7 @@ export default class StatisticsService {
      */
     return (
       await sequelize.query(
-        'SELECT `id`, `profession`, MAX(`earned`) as `earned` FROM (SELECT `Contract->Contractor`.`id` AS `id`, `Contract->Contractor`.`profession` AS `profession`, SUM(`price`) AS `earned` FROM `Jobs` AS `Job` INNER JOIN `Contracts` AS `Contract` ON `Job`.`ContractId` = `Contract`.`id` LEFT OUTER JOIN `Profiles` AS `Contract->Contractor` ON `Contract`.`ContractorId` = `Contract->Contractor`.`id` WHERE `Job`.`paymentDate` BETWEEN :start AND :end GROUP BY `Contract`.`id`)',
+        'SELECT `id`, `profession`, MAX(`earned`) as `earned` FROM (SELECT `Contract->Contractor`.`id` AS `id`, `Contract->Contractor`.`profession` AS `profession`, SUM(`price`) AS `earned` FROM `Jobs` AS `Job` INNER JOIN `Contracts` AS `Contract` ON `Job`.`ContractId` = `Contract`.`id` LEFT OUTER JOIN `Profiles` AS `Contract->Contractor` ON `Contract`.`ContractorId` = `Contract->Contractor`.`id` WHERE DATE(`Job`.`paymentDate`) BETWEEN :start AND :end GROUP BY `Contract`.`ContractorId`)',
         { replacements: { start, end }, type: QueryTypes.SELECT },
       )
     ).filter((item) => item.id);
@@ -43,7 +43,7 @@ export default class StatisticsService {
      * @todo: Rewrite it without native query (if it possible).
      */
     return sequelize.query(
-      "SELECT `Contract->Client`.`id` AS `id`, `Contract->Client`.`lastName` || ' ' || `Contract->Client`.`firstName` as fullName, SUM(`price`) AS `paid` FROM `Jobs` AS `Job` INNER JOIN `Contracts` AS `Contract` ON `Job`.`ContractId` = `Contract`.`id` LEFT OUTER JOIN `Profiles` AS `Contract->Client` ON `Contract`.`ClientId` = `Contract->Client`.`id` WHERE `Job`.`paymentDate` BETWEEN :start AND :end GROUP BY `Contract`.`id` LIMIT :limit",
+      "SELECT `Contract->Client`.`id` AS `id`, `Contract->Client`.`lastName` || ' ' || `Contract->Client`.`firstName` as fullName, SUM(`price`) AS `paid` FROM `Jobs` AS `Job` INNER JOIN `Contracts` AS `Contract` ON `Job`.`ContractId` = `Contract`.`id` LEFT OUTER JOIN `Profiles` AS `Contract->Client` ON `Contract`.`ClientId` = `Contract->Client`.`id` WHERE DATE(`Job`.`paymentDate`) BETWEEN :start AND :end GROUP BY `Contract`.`ClientId` ORDER BY `paid` DESC LIMIT :limit",
       { replacements: { start, end, limit }, type: QueryTypes.SELECT },
     );
   }
