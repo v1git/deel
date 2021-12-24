@@ -32,7 +32,7 @@ export default class BalanceService {
 
     const debt = await this.jobService.getDebtByProfile(profile);
 
-    if (amount > debt * 0.25) {
+    if (debt && amount > debt * 0.25) {
       throw new BadRequestException('The deposit should be less than 25% of your debt.');
     }
 
