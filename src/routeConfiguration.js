@@ -27,22 +27,28 @@ export default (app) => {
     contractController.getOne(req, res, next),
   );
 
-  app.get('/contracts', getProfile, async (req, res) => contractController.getMany(req, res));
-
-  app.get('/jobs/unpaid', getProfile, async (req, res) => jobController.getUnpaid(req, res));
-
-  app.post('/jobs/:jobId/pay', getProfile, async (req, res) => jobController.pay(req, res));
-
-  app.post('/balances/deposit/:userId', getProfile, async (req, res) =>
-    balanceController.deposit(req, res),
+  app.get('/contracts', getProfile, async (req, res, next) =>
+    contractController.getMany(req, res, next),
   );
 
-  app.get('/admin/best-profession', getProfile, async (req, res) =>
-    statisticsController.profession(req, res),
+  app.get('/jobs/unpaid', getProfile, async (req, res, next) =>
+    jobController.getUnpaid(req, res, next),
   );
 
-  app.get('/admin/best-clients', getProfile, async (req, res) =>
-    statisticsController.clients(req, res),
+  app.post('/jobs/:jobId/pay', getProfile, async (req, res, next) =>
+    jobController.pay(req, res, next),
+  );
+
+  app.post('/balances/deposit/:userId', getProfile, async (req, res, next) =>
+    balanceController.deposit(req, res, next),
+  );
+
+  app.get('/admin/best-profession', getProfile, async (req, res, next) =>
+    statisticsController.profession(req, res, next),
+  );
+
+  app.get('/admin/best-clients', getProfile, async (req, res, next) =>
+    statisticsController.clients(req, res, next),
   );
 
   app.get('*', (_req, res) =>
